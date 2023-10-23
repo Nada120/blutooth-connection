@@ -15,7 +15,7 @@ class _BleFlutterState extends State<BleFlutter> {
   @override
   void initState() {
     super.initState();
-    scanDevices();
+    turnOnBluetooth();
   }
 
   void scanDevices() async {
@@ -24,6 +24,17 @@ class _BleFlutterState extends State<BleFlutter> {
       setState(() {
         devices = results;
       });
+    });
+  }
+
+  void turnOnBluetooth() async {
+    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
+      if (state == BluetoothAdapterState.on) {
+        scanDevices();
+      } else {
+        await FlutterBluePlus.turnOn();
+        scanDevices();
+      }
     });
   }
 
