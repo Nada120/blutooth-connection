@@ -16,7 +16,7 @@ class ResultPage extends StatefulWidget {
 class _ResultPageState extends State<ResultPage> {
   List<String> servicesUUID = [];
   List<String> characteristicsUUID = [];
-  List<String> uuid = [];
+  late int batteryLevel;
 
   @override
   void initState() {
@@ -28,15 +28,15 @@ class _ResultPageState extends State<ResultPage> {
     List<BluetoothService> services =
         await widget.bluetoothDevice.discoverServices();
     for (BluetoothService service in services) {
-      setState(() {
-        uuid.add(service.serviceUuid.toString());
-        servicesUUID.add(service.uuid.toString());
-      });
-
-      for (var c in service.characteristics) {
-        setState(() {
-          characteristicsUUID.add(c.uuid.toString());
-        });
+      if (service.uuid.toString() == '0000180f-0000-1000-8000-00805f9b34fb') {
+        for (var c in service.characteristics) {
+          if (c.uuid.toString() == "00002a19-0000-1000-8000-00805f9b34fb") {
+            c.read().then((value) {
+              int batteryLevel = value[0];
+              print("Battery level is $batteryLevel %");
+            });
+          }
+        }
       }
     }
   }
@@ -55,47 +55,15 @@ class _ResultPageState extends State<ResultPage> {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: ListView(
             children: [
-              const Text(
-                'servicesUUID',
+              Text(
+                "Battery level is ${batteryLevel}",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
               ),
-              buildList(servicesUUID),
-              const SizedBox(height: 7),
-              const Text(
-                'characteristicsUUID',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              buildList(characteristicsUUID),
-              const Text(
-                'UUID',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              buildList(uuid),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildList(List<String> data) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: data.length,
-      itemBuilder: (context, index) => Text(
-        data[index],
-        style: TextStyle(
-          color: Colors.purpleAccent[900],
-          fontSize: 14,
         ),
       ),
     );
