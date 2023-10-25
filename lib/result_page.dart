@@ -3,6 +3,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class ResultPage extends StatefulWidget {
   final BluetoothDevice bluetoothDevice;
+
   const ResultPage({
     super.key,
     required this.bluetoothDevice,
@@ -15,6 +16,7 @@ class ResultPage extends StatefulWidget {
 class _ResultPageState extends State<ResultPage> {
   List<String> servicesUUID = [];
   List<String> characteristicsUUID = [];
+  List<String> uuid = [];
 
   @override
   void initState() {
@@ -27,11 +29,11 @@ class _ResultPageState extends State<ResultPage> {
         await widget.bluetoothDevice.discoverServices();
     for (BluetoothService service in services) {
       setState(() {
+        uuid.add(service.serviceUuid.toString());
         servicesUUID.add(service.uuid.toString());
       });
-      List<BluetoothCharacteristic> characteristics = service.characteristics;
 
-      for (var c in characteristics) {
+      for (var c in service.characteristics) {
         setState(() {
           characteristicsUUID.add(c.uuid.toString());
         });
@@ -70,6 +72,14 @@ class _ResultPageState extends State<ResultPage> {
                 ),
               ),
               buildList(characteristicsUUID),
+              const Text(
+                'UUID',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              buildList(uuid),
             ],
           ),
         ),
