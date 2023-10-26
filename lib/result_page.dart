@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -14,6 +15,9 @@ class ResultPage extends StatefulWidget {
 
 class _ResultPageState extends State<ResultPage> {
   List<Map<String, dynamic>> data = [];
+  BluetoothCharacteristic? uartCharacteristic;
+  StreamSubscription<List<int>>? characteristicSubscription;
+  String receivedData = '';
 
   @override
   void initState() {
@@ -34,6 +38,28 @@ class _ResultPageState extends State<ResultPage> {
         });
       });
     }
+    for (BluetoothService service in services) {
+      for (BluetoothCharacteristic characteristic in service.characteristics) {
+        if (characteristic.uuid.toString() == '6e400001-b5a3-f393-e0a9-e50e24dcca9f') {
+          setState(() {
+            uartCharacteristic = characteristic;
+          });
+          await _startCharacteristicNotifications(characteristic);
+          break;
+        }
+      }
+    }
+  }
+
+  Future<void> _startCharacteristicNotifications(
+      BluetoothCharacteristic characteristic) async {
+    await characteristic.setNotifyValue(true);
+    characteristicSubscription =
+        characteristic.lastValueStream.listen((value) {
+      setState(() {
+        receivedData = String.fromCharCodes(value);
+      });
+    });
   }
 
   @override
@@ -47,7 +73,20 @@ class _ResultPageState extends State<ResultPage> {
         height: height,
         color: Colors.purpleAccent.withOpacity(0.04),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: buildList(data),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildList(data),
+            Text(
+              'THE DATA: $receivedData',
+              style: TextStyle(
+                color: Colors.purple[500],
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -84,7 +123,9 @@ class _ResultPageState extends State<ResultPage> {
               fontSize: 18,
             ),
           ),
-          for (var c in data[index]['characteristicsUUID']) Text('$c', style: TextStyle(color: Colors.purple[600], fontSize: 15)),
+          for (var c in data[index]['characteristicsUUID'])
+            Text('$c',
+                style: TextStyle(color: Colors.purple[600], fontSize: 15)),
         ],
       ),
     );
