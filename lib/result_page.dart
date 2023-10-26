@@ -77,11 +77,20 @@ class _ResultPageState extends State<ResultPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildList(data),
+            SizedBox(height: 30),
             Text(
-              'THE DATA: $receivedData',
+              'THE RECEIVED DATA:',
               style: TextStyle(
                 color: Colors.purple[500],
                 fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '$receivedData',
+              style: TextStyle(
+                color: Colors.purple[500],
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
