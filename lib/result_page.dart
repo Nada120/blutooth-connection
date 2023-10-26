@@ -13,8 +13,7 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPageState extends State<ResultPage> {
-  List<String> servicesUUID = [];
-  List<String> characteristicsUUID = [];
+  List<Map<String, dynamic>> data = [];
 
   @override
   void initState() {
@@ -27,15 +26,13 @@ class _ResultPageState extends State<ResultPage> {
         await widget.bluetoothDevice.discoverServices();
     for (BluetoothService service in services) {
       setState(() {
-        servicesUUID.add(service.uuid.toString());
-      });
-      List<BluetoothCharacteristic> characteristics = service.characteristics;
-
-      for (var c in characteristics) {
-        setState(() {
-          characteristicsUUID.add(c.uuid.toString());
+        data.add({
+          "servicesUUID": service.serviceUuid.toString(),
+          "characteristicsUUID": service.characteristics
+              .map((c) => c.characteristicUuid.toString())
+              .toList(),
         });
-      }
+      });
     }
   }
 
@@ -46,47 +43,49 @@ class _ResultPageState extends State<ResultPage> {
       appBar: AppBar(
         title: const Text('Device Data'),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: height,
-          color: Colors.purpleAccent.withOpacity(0.04),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: ListView(
-            children: [
-              const Text(
-                'servicesUUID',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              buildList(servicesUUID),
-              const SizedBox(height: 7),
-              const Text(
-                'characteristicsUUID',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              buildList(characteristicsUUID),
-            ],
-          ),
-        ),
+      body: Container(
+        height: height,
+        color: Colors.purpleAccent.withOpacity(0.04),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: buildList(data),
       ),
     );
   }
 
-  Widget buildList(List<String> data) {
-    return ListView.builder(
+  Widget buildList(List<Map<String, dynamic>> data) {
+    return ListView.separated(
       shrinkWrap: true,
       itemCount: data.length,
-      itemBuilder: (context, index) => Text(
-        data[index],
-        style: TextStyle(
-          color: Colors.purpleAccent[900],
-          fontSize: 14,
-        ),
+      separatorBuilder: (context, index) => SizedBox(height: 25),
+      itemBuilder: (context, index) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'The SERVICE UUID:',
+            style: TextStyle(
+              color: Colors.purple[900],
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          Text(
+            data[index]['servicesUUID'],
+            style: TextStyle(
+              color: Colors.purple[600],
+              fontSize: 15,
+            ),
+          ),
+          Text(
+            'The characteristic UUID:',
+            style: TextStyle(
+              color: Colors.purple[900],
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          for (var c in data[index]['characteristicsUUID']) Text('$c', style: TextStyle(color: Colors.purple[600], fontSize: 15)),
+        ],
       ),
     );
   }
