@@ -56,8 +56,7 @@ class _ResultPageState extends State<ResultPage> {
       for (BluetoothCharacteristic characteristic in service.characteristics) {
         if (characteristic.uuid
                 .toString()
-                .compareTo('e9241982-4580-42c4-8831-95048216b256') ==
-            0 /*'6e400001-b5a3-f393-e0a9-e50e24dcca9f'*/) {
+                .compareTo('6e400001-b5a3-f393-e0a9-e50e24dcca9f') == 0) {
           setState(() {
             uartCharacteristic = characteristic;
           });
