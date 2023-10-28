@@ -1,5 +1,5 @@
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'custom_list_builder.dart';
+import '../widgets/custom_list_builder.dart';
 import 'package:flutter/material.dart';
 
 class BleFlutter extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:bluetooth_connect/flutter_ble.dart';
+import 'package:bluetooth_connect/view/flutter_ble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
