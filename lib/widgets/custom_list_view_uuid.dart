@@ -9,6 +9,7 @@ class CustomListViewUUID extends StatelessWidget {
     return ListView.separated(
       shrinkWrap: true,
       itemCount: data.length,
+      physics: NeverScrollableScrollPhysics(),
       separatorBuilder: (context, index) => SizedBox(height: 25),
       itemBuilder: (context, index) => Column(
         mainAxisSize: MainAxisSize.min,

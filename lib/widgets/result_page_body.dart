@@ -13,31 +13,33 @@ class ResultPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.purpleAccent.withOpacity(0.04),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomListViewUUID(data: data),
-          SizedBox(height: 30),
-          Text(
-            'THE RECEIVED DATA:',
-            style: TextStyle(
-              color: Colors.purple[500],
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.purpleAccent.withOpacity(0.04),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomListViewUUID(data: data),
+            SizedBox(height: 30),
+            Text(
+              'THE RECEIVED DATA:',
+              style: TextStyle(
+                color: Colors.purple[500],
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          Text(
-            '$receivedData',
-            style: TextStyle(
-              color: Colors.purple[500],
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+            Text(
+              '$receivedData',
+              style: TextStyle(
+                color: Colors.purple[500],
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
