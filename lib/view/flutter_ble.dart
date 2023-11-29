@@ -1,40 +1,10 @@
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import '../widgets/custom_list_builder.dart';
+import '../cubit/bluetooth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/custom_list_builder.dart';
 
-class BleFlutter extends StatefulWidget {
+class BleFlutter extends StatelessWidget {
   const BleFlutter({super.key});
-
-  @override
-  State<BleFlutter> createState() => _BleFlutterState();
-}
-
-class _BleFlutterState extends State<BleFlutter> {
-  List<ScanResult> devices = [];
-
-  @override
-  void initState() {
-    super.initState();
-    turnOnBluetooth();
-  }
-
-  void scanDevices() async {
-    FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
-    FlutterBluePlus.scanResults.listen((results) {
-      setState(() {
-        devices = results;
-      });
-    });
-  }
-
-  void turnOnBluetooth() async {
-    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
-      if (state == BluetoothAdapterState.off) {
-        await FlutterBluePlus.turnOn();
-      }   
-      scanDevices();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +12,35 @@ class _BleFlutterState extends State<BleFlutter> {
       appBar: AppBar(
         title: const Text('Scan Devices'),
       ),
-      body: devices.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : CustomListBuilder(
-              devices: devices,
-            ),
+      body: BlocConsumer<BluetoothCubit, BluetoothState>(
+        listener: (context, state) {
+          if (state is BluetoothFailur) {
+            showDialog(
+              barrierDismissible: false,
+              context: context, 
+              builder: (_) => AlertDialog(
+                title: Text(
+                  state.error,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: state.action, 
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is BluetoothScanDevice) {
+            return CustomListBuilder(devices: state.devices);
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 }
