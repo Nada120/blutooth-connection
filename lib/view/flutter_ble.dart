@@ -1,3 +1,4 @@
+import '../widgets/custom_dialog_error.dart';
 import '../cubit/bluetooth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,16 +19,9 @@ class BleFlutter extends StatelessWidget {
             showDialog(
               barrierDismissible: false,
               context: context, 
-              builder: (_) => AlertDialog(
-                title: Text(
-                  state.error,
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: state.action, 
-                    child: Text('OK'),
-                  ),
-                ],
+              builder: (_) => CustomDialogError(
+                title: state.error, 
+                onPressed: state.action,
               ),
             );
           }
