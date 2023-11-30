@@ -2,12 +2,12 @@ import 'package:bluetooth_connect/widgets/custom_list_view_uuid.dart';
 import 'package:flutter/material.dart';
 
 class ResultPageBody extends StatelessWidget {
-  final List<Map<String, dynamic>> data;
-  final String receivedData;
+  final List<Map<String, dynamic>> servicesData;
+  final List<int> receivedData;
 
   const ResultPageBody({
     super.key,
-    required this.data,
+    required this.servicesData,
     required this.receivedData,
   });
 
@@ -15,12 +15,11 @@ class ResultPageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        color: Colors.purpleAccent.withOpacity(0.04),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomListViewUUID(data: data),
+            CustomListViewUUID(data: servicesData),
             SizedBox(height: 30),
             Text(
               'THE RECEIVED DATA:',

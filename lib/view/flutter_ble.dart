@@ -21,7 +21,6 @@ class BleFlutter extends StatelessWidget {
               context: context, 
               builder: (_) => CustomDialogError(
                 title: state.error, 
-                onPressed: state.action,
               ),
             );
           }

@@ -37,21 +37,23 @@ class CustomListBuilder extends StatelessWidget {
         ),
         trailing: BlocListener<cubit.BluetoothCubit, cubit.BluetoothState>(
           listener: (context, state) {
-            if (state is cubit.BluetoothConnectedDevice) {
+            if (state is cubit.BluetoothDeviceService) {
               // Navigate to the result page with the connected device
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => ResultPage(
-                    bluetoothDevice: state.connectDevice,
+                    // Will take the data of device service and received data
+                    receivedData: state.receivedData,
+                    servicesData: state.services,
                   ),
-                ), 
+                ),
               );
             }
           },
           child: ElevatedButton(
             onPressed: () {
-              // call the method of connecting the device 
+              // call the method of connecting the device
               context.read<cubit.BluetoothCubit>().connectToDevice(
                 devices[index].device,
               );

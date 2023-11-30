@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 
 class CustomDialogError extends StatelessWidget {
   final String title;
-  final void Function()? onPressed;
   const CustomDialogError({
     super.key,
     required this.title,
-    required this.onPressed,
   });
 
   @override
@@ -17,7 +15,9 @@ class CustomDialogError extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: onPressed,
+          onPressed: () {
+            Navigator.pop(context);
+          },
           child: Text('OK'),
         ),
       ],

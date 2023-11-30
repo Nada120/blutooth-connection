@@ -10,15 +10,14 @@ final class BluetoothScanDevice extends BluetoothInitial {
 
   BluetoothScanDevice(this.devices);
 }
+final class BluetoothDeviceService extends BluetoothInitial {
+  final List<Map<String, dynamic>> services;
+  final List<int> receivedData;
 
-final class BluetoothConnectedDevice extends BluetoothInitial {
-  final BluetoothDevice connectDevice;
-
-  BluetoothConnectedDevice(this.connectDevice);
+  BluetoothDeviceService(this.receivedData, this.services);
 }
 
 final class BluetoothFailur extends BluetoothInitial {
   final String error;
-  final void Function()? action;
-  BluetoothFailur(this.error, this.action);
+  BluetoothFailur(this.error);
 }

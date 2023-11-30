@@ -1,30 +1,15 @@
-import 'dart:async';
-import 'package:bluetooth_connect/widgets/result_page_body.dart';
+import '../widgets/result_page_body.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-class ResultPage extends StatefulWidget {
-  final BluetoothDevice bluetoothDevice;
+class ResultPage extends StatelessWidget {
+  final List<Map<String, dynamic>> servicesData;
+  final List<int> receivedData;
+  
   const ResultPage({
     super.key,
-    required this.bluetoothDevice,
+    required this.receivedData,
+    required this.servicesData,
   });
-
-  @override
-  State<ResultPage> createState() => _ResultPageState();
-}
-
-class _ResultPageState extends State<ResultPage> {
-  List<Map<String, dynamic>> data = [];
-  BluetoothCharacteristic? uartCharacteristic;
-  StreamSubscription<List<int>>? characteristicSubscription;
-  String receivedData = '';
-
-  @override
-  void initState() {
-    super.initState();
-    discoverServices();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,48 +18,9 @@ class _ResultPageState extends State<ResultPage> {
         title: const Text('Device Data'),
       ),
       body: ResultPageBody(
-        data: data,
+        servicesData: servicesData,
         receivedData: receivedData,
       ),
     );
-  }
-
-  void discoverServices() async {
-    List<BluetoothService> services =
-        await widget.bluetoothDevice.discoverServices();
-    for (BluetoothService service in services) {
-      setState(() {
-        data.add({
-          "servicesUUID": service.uuid.toString(),
-          "characteristicsUUID":
-              service.characteristics.map((c) => c.uuid.toString()).toList(),
-        });
-      });
-    }
-
-    for (BluetoothService service in services) {
-      for (BluetoothCharacteristic characteristic in service.characteristics) {
-        if (characteristic.uuid
-                .toString()
-                .compareTo('6e400001-b5a3-f393-e0a9-e50e24dcca9f') == 0) {
-          setState(() {
-            uartCharacteristic = characteristic;
-          });
-          await startCharacteristicNotifications(characteristic);
-          break;
-        }
-      }
-    }
-  }
-
-  Future<void> startCharacteristicNotifications(
-      BluetoothCharacteristic characteristic) async {
-    await characteristic.setNotifyValue(true);
-    characteristicSubscription = characteristic.lastValueStream.listen((value) {
-      print('The Received Data is =============>  $value');
-      setState(() {
-        receivedData = String.fromCharCodes(value);
-      });
-    });
   }
 }
