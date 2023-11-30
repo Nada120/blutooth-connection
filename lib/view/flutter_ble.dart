@@ -30,7 +30,6 @@ class BleFlutter extends StatelessWidget {
           if (state is BluetoothScanDevice) {
             return CustomListBuilder(
               devices: state.devices,
-              onPressed: (){},
             );
           }
           return Center(
