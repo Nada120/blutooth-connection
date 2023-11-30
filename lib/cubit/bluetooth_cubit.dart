@@ -33,30 +33,30 @@ class BluetoothCubit extends Cubit<BluetoothState> {
 
   void scanDevices() {
     // Start for scanning devices
+    FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
+    // Show the results of the scanning devices
     FlutterBluePlus.scanResults.listen((results) {
-      // Devices was founded 
-      if (results.isNotEmpty) {
-        // active BluetoothScanDevice state
-        emit(BluetoothScanDevice(results));
-      } else {
-        // No devices was founded
-        emit(BluetoothFailur(
-          'There Is No Devices In This Location', // Error text that will show to the user
-          () {
-            scanDevices(); // This action will run the function again
-          },
-        ));
-      }
-    });
+      // Devices was founded
+      // active BluetoothScanDevice state
+      emit(BluetoothScanDevice(results));
+    },
+    onError: (_) => // No devices was founded
+      emit(BluetoothFailur(
+        'There Is No Devices In This Location', // Error text that will show to the user
+        () {
+          scanDevices(); // This action will run the function again
+        }),
+      ),
+    );
   }
 
   void connectToDevice(BluetoothDevice device) {
-    // Start connect to the device 
+    // Start connect to the device
     device.connect().then((_) {
-      // Active BluetoothConnectedDevice state 
+      // Active BluetoothConnectedDevice state
       emit(BluetoothConnectedDevice(device));
     }).onError((_, __) {
-      // Will show error if can NOT connect to the device 
+      // Will show error if can NOT connect to the device
       emit(BluetoothFailur(
         'Failed To Connect To Your Device', // Error text that will show to the user
         () {
