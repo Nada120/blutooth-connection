@@ -14,7 +14,8 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              BlocProvider.of<BluetoothCubit>(context).checkBluetoothConnectivity();
+              BlocProvider.of<BluetoothCubit>(context)
+                  .checkBluetoothConnectivity();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -24,34 +25,48 @@ class HomePage extends StatelessWidget {
             },
             icon: Icon(
               Icons.watch_sharp,
-              color: data != null ? Colors.purple: Colors.grey,
+              color: data != null ? Colors.purple : Colors.grey,
             ),
           ),
         ],
       ),
       body: Center(
-        child: Column(
-          children: [
-            Text(
-              'The data is',
-              style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 22,
+        child: StreamBuilder(
+          stream: data,
+          builder: (context, snapshot) {
+            var sn = snapshot.data;
+            return Column(
+              children: [
+                Text(
+                  'The Heart rate is: ${sn == null ? '0' : sn}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 22,
+                  ),
                 ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            StreamBuilder(
-              stream: data,
-              builder: (context, snapshot) => Text(
-                '${snapshot.data == null ? '00' : '${snapshot.data}'}',
-                style: TextStyle(
-                  fontSize: 16,
+                SizedBox(
+                  height: 5,
                 ),
-              ),
-            ),
-          ],
+                Text(
+                  'The Blood Oxygen is: ${sn == null ? '0' : sn}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 22,
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'The Calories is: ${sn == null ? '0' : sn}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 22,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

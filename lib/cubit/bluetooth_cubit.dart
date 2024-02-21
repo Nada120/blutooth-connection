@@ -91,4 +91,3 @@ class BluetoothCubit extends Cubit<BluetoothState> {
     });
   }
 }
-//services[5].characteristics[1];
