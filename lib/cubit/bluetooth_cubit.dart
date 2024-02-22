@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'bluetooth_state.dart';
 
@@ -34,7 +35,10 @@ class BluetoothCubit extends Cubit<BluetoothState> {
     bool isTheredevices = false;
 
     // Start for scanning devices
-    FlutterBluePlus.startScan(timeout: const Duration(days: 1));
+    FlutterBluePlus.startScan(
+      //withServices:[Guid("1801")], // scan only wear OS watches
+      timeout: const Duration(days: 1),
+    );
     // Show the results of the scanning devices
     FlutterBluePlus.scanResults.listen(
       (results) {

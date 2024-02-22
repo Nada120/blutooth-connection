@@ -35,6 +35,8 @@ class HomePage extends StatelessWidget {
           stream: data,
           builder: (context, snapshot) {
             var sn = snapshot.data;
+            var hex = sn?.map((code) => code.toRadixString(16)).join('');
+            debugPrint('The data in the hex is $hex');
             return Column(
               children: [
                 Text(
