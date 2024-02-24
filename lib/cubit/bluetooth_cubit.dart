@@ -7,7 +7,7 @@ part 'bluetooth_state.dart';
 
 class BluetoothCubit extends Cubit<BluetoothState> {
   BluetoothCubit() : super(BluetoothInitial());
-  Stream<List<int>>? recievedData;
+  List<Stream<List<int>>> recievedData = [];
 
   void checkBluetoothConnectivity() {
     // It is check for bluetooth connection
@@ -36,7 +36,7 @@ class BluetoothCubit extends Cubit<BluetoothState> {
 
     // Start for scanning devices
     FlutterBluePlus.startScan(
-      //withServices:[Guid("1801")], // scan only wear OS watches
+      //withServices:[Guid("0x1801"), Guid("0x1800")], // scan only wear OS watches
       timeout: const Duration(days: 1),
     );
     // Show the results of the scanning devices
@@ -80,18 +80,38 @@ class BluetoothCubit extends Cubit<BluetoothState> {
     );
   }
 
-  void discoverServicesAndData(BluetoothDevice connectedDevice) {
+  void discoverServicesAndData(BluetoothDevice connectedDevice) async {
     // To discover the services of the connected device
     connectedDevice.discoverServices().then((services) {
       // the uuid for notify & read the data is 0000fea1-0000-1000-8000-00805f9b34fb
-      services[1].characteristics[0].setNotifyValue(true).then((value) {
-        recievedData = services[1]
-            .characteristics[0]
-            .read()
-            .asStream()
-            .asBroadcastStream();
+      
+      services[1].characteristics[0].setNotifyValue(true).then((_) {
+        recievedData.add(services[1].characteristics[0].read().asStream().asBroadcastStream());
         emit(BluetoothDeviceService(recievedData));
       });
+      
+      // services[2].characteristics[1].setNotifyValue(true).then((_) {
+      //   recievedData.add(services[2].characteristics[1].read().asStream().asBroadcastStream());
+      //   emit(BluetoothDeviceService(recievedData));
+      // });
+      
+      // services[4].characteristics[1].setNotifyValue(true).then((_) {
+      //   recievedData.add(services[4].characteristics[1].read().asStream().asBroadcastStream());
+      //   emit(BluetoothDeviceService(recievedData));
+      // });
+
+      // services[5].characteristics[1].setNotifyValue(true).then((_) {
+      //   recievedData.add(services[5].characteristics[1].read().asStream().asBroadcastStream());
+      //   emit(BluetoothDeviceService(recievedData));
+      // });
+      
+      //recievedData.add(services[3].characteristics[2].read().asStream().asBroadcastStream());
+      //recievedData.add(services[3].characteristics[3].read().asStream().asBroadcastStream());
+      //recievedData.add(services[3].characteristics[6].read().asStream().asBroadcastStream());
+      //recievedData.add(services[3].characteristics[8].read().asStream().asBroadcastStream());
+      //recievedData.add(services[3].characteristics[9].read().asStream().asBroadcastStream());
+    
+      //emit(BluetoothDeviceService(recievedData));
     });
   }
 }

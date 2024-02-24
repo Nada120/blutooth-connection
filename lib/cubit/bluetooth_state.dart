@@ -11,7 +11,7 @@ final class BluetoothScanDevice extends BluetoothInitial {
 }
 
 final class BluetoothDeviceService extends BluetoothInitial {
-  final  Stream<List<int>>? receivedData;
+  final  List<Stream<List<int>>> receivedData;
   BluetoothDeviceService(this.receivedData);
 }
 

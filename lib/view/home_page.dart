@@ -25,48 +25,24 @@ class HomePage extends StatelessWidget {
             },
             icon: Icon(
               Icons.watch_sharp,
-              color: data != null ? Colors.purple : Colors.grey,
+              color: data.isNotEmpty ? Colors.purple : Colors.grey,
             ),
           ),
         ],
       ),
       body: Center(
-        child: StreamBuilder(
-          stream: data,
-          builder: (context, snapshot) {
-            var sn = snapshot.data;
-            var hex = sn?.map((code) => code.toRadixString(16)).join('');
-            debugPrint('The data in the hex is $hex');
-            return Column(
-              children: [
-                Text(
-                  'The Heart rate is: ${sn == null ? '0' : sn}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 22,
-                  ),
+        child: ListView.builder(
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            return StreamBuilder(
+              stream: data[index],
+              builder: (context, snapshot) => Text(
+                'The Data of index ${index} is: ${snapshot.data}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 22,
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  'The Blood Oxygen is: ${sn == null ? '0' : sn}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 22,
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  'The Calories is: ${sn == null ? '0' : sn}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 22,
-                  ),
-                ),
-              ],
+              ),
             );
           },
         ),
